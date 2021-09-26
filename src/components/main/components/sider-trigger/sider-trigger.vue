@@ -17,6 +17,7 @@ export default {
   },
   methods: {
     handleChange () {
+      console.log(123)
       this.$emit('on-change', !this.collapsed)
     }
   }

@@ -1,5 +1,4 @@
 import {
-  getBreadCrumbList,
   setTagNavListInLocalstorage,
   getMenuByRouter,
   getTagNavListFromLocalstorage,
@@ -15,6 +14,7 @@ import { saveErrorLogger } from '@/api/data'
 import router from '@/router'
 import routers from '@/router/routers'
 import config from '@/config'
+import headerRouter from '@/router/header'
 const { homeName } = config
 
 const closePage = (state, route) => {
@@ -24,10 +24,9 @@ const closePage = (state, route) => {
   })
   router.push(nextRoute)
 }
-
 export default {
   state: {
-    breadCrumbList: [],
+    breadCrumbList: headerRouter,
     tagNavList: [],
     homeRoute: {},
     local: localRead('local'),
@@ -39,9 +38,6 @@ export default {
     errorCount: state => state.errorList.length
   },
   mutations: {
-    setBreadCrumb (state, route) {
-      state.breadCrumbList = getBreadCrumbList(route, state.homeRoute)
-    },
     setHomeRoute (state, routes) {
       state.homeRoute = getHomeRoute(routes, homeName)
     },

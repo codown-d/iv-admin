@@ -140,12 +140,12 @@ export default [
     ]
   },
   {
-    path: '/lifeFirstAid(IOT)',
+    path: '/lifeFirstAid',
     name: 'lifeFirstAid(IOT)',
     component: Main,
     children: [
       {
-        path: '/lifeFirstAid(IOT)',
+        path: '/lifeFirstAid',
         name: 'lifeFirstAid(IOT)',
         meta: {
           icon: 'md-home',
@@ -156,12 +156,12 @@ export default [
     ]
   },
   {
-    path: '/largeEquipment(IOT)',
+    path: '/largeEquipment',
     name: 'largeEquipment(IOT)',
     component: Main,
     children: [
       {
-        path: '/largeEquipment(IOT)',
+        path: '/largeEquipment',
         name: 'largeEquipment(IOT)',
         meta: {
           icon: 'md-home',

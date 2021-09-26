@@ -19,32 +19,20 @@
       >
         <!-- 需要放在菜单上面的内容，如Logo，写在side-menu标签内部，如下 -->
         <div class="logo-con">
-          <img v-show="!collapsed" :src="maxLogo" key="max-logo" />
-          <img v-show="collapsed" :src="minLogo" key="min-logo" />
+          <img :src="logo" />
         </div>
+
+ <template v-slot:footer>
+      <sider-trigger  :collapsed="collapsed" icon="md-menu" @on-change="handleCollapsedChange"></sider-trigger>
+  </template>
       </side-menu>
     </Sider>
-    <Layout>
+    <Layout style="overflow-x:inherit">
       <Header class="header-con">
         <header-bar
           :collapsed="collapsed"
-          @on-coll-change="handleCollapsedChange"
         >
           <user :message-unread-count="unreadCount" :user-avatar="userAvatar" />
-          <language
-            v-if="$config.useI18n"
-            @on-lang-change="setLocal"
-            style="margin-right: 10px;"
-            :lang="local"
-          />
-          <error-store
-            v-if="
-              $config.plugin['error-store'] &&
-                $config.plugin['error-store'].showInHeader
-            "
-            :has-read="hasReadErrorPage"
-            :count="errorCount"
-          ></error-store>
           <fullscreen v-model="isFullscreen" style="margin-right: 10px;" />
         </header-bar>
       </Header>
@@ -78,13 +66,14 @@ import ErrorStore from './components/error-store'
 import { mapMutations, mapActions, mapGetters } from 'vuex'
 import { getNewTagList, routeEqual } from '@/libs/util'
 import routers from '@/router/routers'
-import minLogo from '@/assets/images/logo-min.jpg'
-import maxLogo from '@/assets/images/logo.jpg'
+import logo from '@/assets/images/logo.png'
+import siderTrigger from './components/sider-trigger'
 import './main.less'
 export default {
   name: 'Main',
   components: {
     SideMenu,
+    siderTrigger,
     HeaderBar,
     Language,
     TagsNav,
@@ -96,8 +85,7 @@ export default {
   data () {
     return {
       collapsed: false,
-      minLogo,
-      maxLogo,
+      logo,
       isFullscreen: false
     }
   },
@@ -138,7 +126,6 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'setBreadCrumb',
       'setTagNavList',
       'addTag',
       'setLocal',
@@ -190,7 +177,6 @@ export default {
         route: { name, query, params, meta },
         type: 'push'
       })
-      this.setBreadCrumb(newRoute)
       this.setTagNavList(getNewTagList(this.tagNavList, newRoute))
       this.$refs.sideMenu.updateOpenName(newRoute.name)
     }
@@ -205,7 +191,6 @@ export default {
     this.addTag({
       route: { name, params, query, meta }
     })
-    this.setBreadCrumb(this.$route)
     // 设置初始语言
     this.setLocal(this.$i18n.locale)
     // 如果当前打开页面不在标签栏中，跳到homeName页

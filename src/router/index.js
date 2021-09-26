@@ -8,6 +8,11 @@ import config from '@/config'
 const { homeName } = config
 
 Vue.use(Router)
+
+const originalPush = Router.prototype.push
+Router.prototype.push = function push (location) {
+  return originalPush.call(this, location).catch(err => err)
+}
 const router = new Router({
   routes,
   mode: 'history'
@@ -15,7 +20,8 @@ const router = new Router({
 const LOGIN_PAGE_NAME = 'login'
 
 const turnTo = (to, access, next) => {
-  if (canTurnTo(to.name, access, routes)) next() // 有权限，可访问
+  if (canTurnTo(to.name, access, routes)) next()
+  // 有权限，可访问
   else next({ replace: true, name: 'error_401' }) // 无权限，重定向到401页面
 }
 
@@ -39,15 +45,18 @@ router.beforeEach((to, from, next) => {
     if (store.state.user.hasGetInfo) {
       turnTo(to, store.state.user.access, next)
     } else {
-      store.dispatch('getUserInfo').then(user => {
-        // 拉取用户信息，通过用户权限和跳转的页面的name来判断是否有权限访问;access必须是一个数组，如：['super_admin'] ['super_admin', 'admin']
-        turnTo(to, user.access, next)
-      }).catch(() => {
-        setToken('')
-        next({
-          name: 'login'
+      store
+        .dispatch('getUserInfo')
+        .then(user => {
+          // 拉取用户信息，通过用户权限和跳转的页面的name来判断是否有权限访问;access必须是一个数组，如：['super_admin'] ['super_admin', 'admin']
+          turnTo(to, user.access, next)
         })
-      })
+        .catch(() => {
+          setToken('')
+          next({
+            name: 'login'
+          })
+        })
     }
   }
 })

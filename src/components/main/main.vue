@@ -27,7 +27,7 @@
   </template>
       </side-menu>
     </Sider>
-    <Layout style="overflow-x:inherit">
+    <Layout >
       <Header class="header-con">
         <header-bar
           :collapsed="collapsed"
